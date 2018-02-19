@@ -4,52 +4,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class QueryDetails {
+	String fileName;
 	String query;
 	String basePart;
 	String filterPart;
 	String orderBy;
 	String groupBy;
-	List<String> logicalOp;
-	List<String> conditions;
-	public String getQuery() {
-		return query;
-	}
-	public String getBasePart() {
-		return basePart;
-	}
-	public String getFilterPart() {
-		return filterPart;
-	}
-	public String getOrderBy() {
-		return orderBy;
-	}
-	public String getGroupBy() {
-		return groupBy;
-	}
-	public List<String> getLogicalOp() {
-		return logicalOp;
-	}
-	public List<String> getConditions() {
-		return conditions;
-	}
-	public List<String> getDisplayFields() {
-		return displayFields;
-	}
-	public List<String> getAggregrateFields() {
-		return aggregrateFields;
-	}
-	List<String> displayFields;
-	List<String> aggregrateFields;
+	String displayString;
+	String allFields;
+	ArrayList<String> logicalOp;
+	ArrayList<String> conditions;
+	ArrayList<String> displayFields;
+	ArrayList<String> aggregrateFields;
 	
 	public QueryDetails(String query1) {
+		HeaderFields h=new HeaderFields();
 		query=trimmer(query1);//removes all extra whitespaces
 		String x="where";
-		if(query.indexOf(x)==-1)
-			basePart=query;
-		else{
-			basePart=query.substring(0,query.indexOf(x)-1);//gives base part
-			filterPart=query.substring(query.indexOf(x)+x.length()+1);//gives filtered part
-		}
+		String tokens[]=query.split(" ");
+		int fileIndex=h.getIndex(tokens, x)-1;
+		
+		fileName=tokens[fileIndex];
+		System.out.println(fileName);
+		basePart=query.substring(0,query.indexOf("from"));//gives base part
+		System.out.println(basePart);
+		filterPart=query.substring(query.indexOf(x)+x.length()+1);//gives filtered part
 		logicalOp=new ArrayList<String>();
 		conditions=new ArrayList<String>();
 		if(filterPart!=null) {
@@ -69,7 +48,11 @@ public class QueryDetails {
 			}
 			condition="";	
 			for(int j=previous;j<filteredWords.length;j++) {
+				if(filteredWords[j].equals("order")||filteredWords[j].equals("group")) {
+					break;
+				}
 				condition+=filteredWords[j]+" ";
+				
 			}
 			conditions.add(condition.trim());
 			
@@ -77,13 +60,14 @@ public class QueryDetails {
 			groupBy=getGroupBy(filterPart);
 			orderBy=getOrderBy(filterPart);
 		}
-		
-		
 		displayFields=new ArrayList<String>();
 		aggregrateFields=new ArrayList<String>();
-		
-		String allFields=basePart.substring(basePart.indexOf("select")+7,basePart.indexOf("from"));
+		System.out.println(basePart);
+		allFields=basePart.substring(basePart.indexOf("select")+7);
 		String[] fields=allFields.split(",");
+	for (int i = 0; i < fields.length; i++) {
+		System.out.println(fields[i]);
+	}
 		boolean selectAll=false;
 		if(fields.length==2&&fields[1].equals("*")) {
 			selectAll=true;
@@ -138,5 +122,35 @@ public class QueryDetails {
 		for(String word:words) {
 			System.out.println(word);
 		}
+	}
+	public String getQuery() {
+		return query;
+	}
+	public String getBasePart() {
+		return basePart;
+	}
+	public String getFilterPart() {
+		return filterPart;
+	}
+	public String getOrderBy() {
+		return orderBy;
+	}
+	public String getGroupBy() {
+		return groupBy;
+	}
+	public ArrayList<String> getLogicalOp() {
+		return logicalOp;
+	}
+	public ArrayList<String> getConditions() {
+		return conditions;
+	}
+	public ArrayList<String> getDisplayFields() {
+		return displayFields;
+	}
+	public ArrayList<String> getAggregrateFields() {
+		return aggregrateFields;
+	}
+	public String getfileName() {
+		return fileName;
 	}
 }

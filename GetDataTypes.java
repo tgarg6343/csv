@@ -18,8 +18,7 @@ public GetDataTypes(String header,String valueRow) {
 	char[] dataTypes=new char[17];
 	
 	Map<String,String> map=new LinkedHashMap<String,String>();
-	for(String header1:headers1)
-		{
+	for(String header1:headers1){
 		try {
 			int x=Integer.parseInt(header1);
 			map.put(header1, "Integer");
@@ -27,7 +26,7 @@ public GetDataTypes(String header,String valueRow) {
 		catch(NumberFormatException e){
 			map.put(header1, "String");
 		}
-		}
+	}
 	
 	Set<String> keys=map.keySet();
 	Iterator<String> iterator=keys.iterator();
@@ -36,11 +35,6 @@ public GetDataTypes(String header,String valueRow) {
 		String key=(String)iterator.next();
 		System.out.println("key:"+key+" value: "+map.get(key));
 	}
-	
-	
-	
-	
-	
 	
 }
 }
