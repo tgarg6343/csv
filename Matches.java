@@ -1,3 +1,4 @@
+package com.database.dbenginecsv;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,11 +34,11 @@ public class Matches {
 				y=count;
 			}
 			count++;
-		}
+		}//getting indexes where there is comma in the venue
 		if(y!=-1) {
 			list.set(y-1,list.get(y-1)+","+list.get(y));
 			list.remove(y);
-		}
+		}//resolving comma conflict
 		id=list.get(0);
 		season=list.get(1);
 		city=list.get(2);

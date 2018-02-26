@@ -1,3 +1,4 @@
+package com.database.dbenginecsv;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,12 +24,20 @@ public class QueryDetails {
 		String x="where";
 		String tokens[]=query.split(" ");
 		int fileIndex=h.getIndex(tokens, x)-1;
-		
+		if(fileIndex!=-2) {
 		fileName=tokens[fileIndex];
+		}
+		else
+			fileName=query.substring(query.indexOf("from")+5);
 		System.out.println(fileName);
 		basePart=query.substring(0,query.indexOf("from"));//gives base part
 		System.out.println(basePart);
+		if(query.contains(x)) {
 		filterPart=query.substring(query.indexOf(x)+x.length()+1);//gives filtered part
+		}
+		else {
+			filterPart=null;
+		}
 		logicalOp=new ArrayList<String>();
 		conditions=new ArrayList<String>();
 		if(filterPart!=null) {
@@ -51,18 +60,14 @@ public class QueryDetails {
 				if(filteredWords[j].equals("order")||filteredWords[j].equals("group")) {
 					break;
 				}
-				condition+=filteredWords[j]+" ";
-				
+				condition+=filteredWords[j]+" ";			
 			}
 			conditions.add(condition.trim());
-			
-			
 			groupBy=getGroupBy(filterPart);
 			orderBy=getOrderBy(filterPart);
 		}
 		displayFields=new ArrayList<String>();
 		aggregrateFields=new ArrayList<String>();
-		System.out.println(basePart);
 		allFields=basePart.substring(basePart.indexOf("select")+7);
 		String[] fields=allFields.split(",");
 	for (int i = 0; i < fields.length; i++) {
@@ -84,6 +89,8 @@ public class QueryDetails {
 				}
 			}
 		}
+		
+	
 		
 	}
 	public String getOrderBy(String filterpart) {
